@@ -1,4 +1,94 @@
-<!DOCTYPE html>
 <html>
-<!-- main script in drive, add when needing multiple files -->
+<body onkeydown="keypressed(event)" onkeyup="keyup(event)" bgcolor="#000000">
+<canvas id="canvas" width=1000 height=800 ></canvas>
+</body>
+<script type="text/javascript">
+	var canvas=document.getElementById("canvas");
+	var context=canvas.getContext("2d");
+	var paused=false;
+	var left=false;
+	var right=false;
+	var up=false;
+	var down=false;
+	var left2=false;
+	var right2=false;
+	var up2=false;
+	var down2=false;
+	function keyup(key){
+		if(key.keyCode==39 || key.keyCode==37){speedX/=5;speedY/=1.25;}
+		if(key.keyCode==38 || key.keyCode==40){speedY/=5;speedX/=1.25;}
+		if(key.keyCode==39){right=false;}
+		if(key.keyCode==37){left=false;}
+		if(key.keyCode==38){up=false;}
+		if(key.keyCode==40){down=false;}
+		if(key.keyCode==68 || key.keyCode==65){speedX2/=5;speedY2/=1.25;}
+		if(key.keyCode==87 || key.keyCode==83){speedY2/=5;speedX2/=1.25;}
+		if(key.keyCode==68){right2=false;}
+		if(key.keyCode==65){left2=false;}
+		if(key.keyCode==87){up2=false;}
+		if(key.keyCode==83){down2=false;}
+		if(key.keyCode==27){paused=!paused;console.log("Pause was pressed (ESC)");}
+	}
+	function keypressed(key){
+		if(key.keyCode==39){speedX=5;dir=0;right=true;}
+		if(key.keyCode==37){speedX=-5;dir=1;left=true;}
+		if(key.keyCode==38){speedY=-5;dir=2;up=true;}
+		if(key.keyCode==40){speedY=5;dir=3;down=true;}
+		if(key.keyCode==68){speedX2=5;dir2=0;right2=true;}
+		if(key.keyCode==65){speedX2=-5;dir2=1;left2=true;}
+		if(key.keyCode==87){speedY2=-5;dir2=2;up2=true;}
+		if(key.keyCode==83){speedY2=5;dir2=3;down2=true;}
+	}
+	function drawPlayer(dir, x, y, clr){
+		context.beginPath();
+		if(dir==0){context.lineTo(x-15,y+20);context.lineTo(x-15,y-20);context.lineTo(x+15,y);}
+		if(dir==1){context.lineTo(x+15,y+20);context.lineTo(x+15,y-20);context.lineTo(x-15,y);}
+		if(dir==2){context.lineTo(x+20,y+15);context.lineTo(x-20,y+15);context.lineTo(x,y-15);}
+		if(dir==3){context.lineTo(x+20,y-15);context.lineTo(x-20,y-15);context.lineTo(x,y+15);}
+		context.closePath();
+		context.fillStyle=clr;
+		context.fill();
+	}
+	var tX=0;
+	var tY=0;
+	var i=0;
+	function getRand(min, max){return Math.floor(Math.random()*(max-min+1)+min);}
+	function init(){
+		tX=getRand(20,canvas.width);
+		tY=getRand(20,canvas.height);
+		console.log("P1 Starting at: X:", x, "  Y:", y, "  Direction:", dir);
+		console.log("P2 Starting at: X:", x2, "  Y:", y2, "  Direction:", dir2);
+	}
+	var speedX=0;
+	var speedY=0;
+	var speedX2=0;
+	var speedY2=0;
+	var x=getRand(20,canvas.width-20);
+	var y=getRand(20,canvas.height-20);
+	var x2=getRand(20,canvas.width-20);
+	var y2=getRand(20,canvas.height-20);
+	var dir=getRand(0,3);
+	var dir2=getRand(0,3);
+	function draw(){
+		if(!paused){
+		if(up && down){speedY=0;}else{if(left && right){speedX=0;}}
+		x+=speedX;y+=speedY;
+		if(up2 && down2){speedY2=0;}else{if(left2 && right2){speedX2=0;}}
+		x2+=speedX2;y2+=speedY2;
+		context.clearRect(0,0,canvas.width,canvas.height)
+		//context.clearRect(x-25,y-25,x+25,y+25);
+		//context.clearRect(x2-25,y2-25,x2+25,y2+25);
+		if(x >= canvas.width+15){x=-10};
+		if(x <= -15){x=canvas.width+10};
+		if(y >= canvas.height+15){y=-10};
+		if(y <= -15){x=canvas.height+10};
+		drawPlayer(dir, x, y, "red");
+		drawPlayer(dir2, x2, y2, "blue");}
+		setTimeout(draw,20);
+	}
+		init();
+	drawPlayer(dir, x, y, "red");
+	drawPlayer(dir2, x2, y2, "blue");
+	draw();//make the animation happen
+</script>
 </html>
