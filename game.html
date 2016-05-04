@@ -6,38 +6,56 @@
 	var canvas=document.getElementById("canvas");
 	var context=canvas.getContext("2d");
 	var paused=false;
-	var left=false;
-	var right=false;
-	var up=false;
-	var down=false;
-	var left2=false;
-	var right2=false;
-	var up2=false;
-	var down2=false;
+	var _1left=false;
+	var _1right=false;
+	var _1up=false;
+	var _1down=false;
+	var _2left=false;
+	var _2right=false;
+	var _2up=false;
+	var _2down=false;
+	var __1left=false;
+	var __1right=false;
+	var __1up=false;
+	var __1down=false;
+	var _1speedX=0;
+	var _1speedY=0;
+	var _2speedX=0;
+	var _2speedY=0;
+	var _1x=getRand(20,canvas.width-20);
+	var _1y=getRand(20,canvas.height-20);
+	var _2x=getRand(20,canvas.width-20);
+	var _2y=getRand(20,canvas.height-20);
+	var _1dir=getRand(0,3);
+	var _2dir=getRand(0,3);
+		init();
+	drawPlayer(_1dir, _1x, _1y, "red");
+	drawPlayer(_2dir, _2x, _2y, "blue");
+	draw();//make the animation happen
 	function keyup(key){
-		if(key.keyCode==39 || key.keyCode==37){speedX/=5;speedY/=1.25;}
-		if(key.keyCode==38 || key.keyCode==40){speedY/=5;speedX/=1.25;}
-		if(key.keyCode==39){right=false;}
-		if(key.keyCode==37){left=false;}
-		if(key.keyCode==38){up=false;}
-		if(key.keyCode==40){down=false;}
-		if(key.keyCode==68 || key.keyCode==65){speedX2/=5;speedY2/=1.25;}
-		if(key.keyCode==87 || key.keyCode==83){speedY2/=5;speedX2/=1.25;}
-		if(key.keyCode==68){right2=false;}
-		if(key.keyCode==65){left2=false;}
-		if(key.keyCode==87){up2=false;}
-		if(key.keyCode==83){down2=false;}
+		if(key.keyCode==39 || key.keyCode==37){_1speedX/=5;_1speedY/=1.25;}
+		if(key.keyCode==38 || key.keyCode==40){_1speedY/=5;_1speedX/=1.25;}
+		if(key.keyCode==39){_1right=false;}
+		if(key.keyCode==37){_1left=false;}
+		if(key.keyCode==38){_1up=false;}
+		if(key.keyCode==40){_1down=false;}
+		if(key.keyCode==68 || key.keyCode==65){_2speedX/=5;_2speedY/=1.25;}
+		if(key.keyCode==87 || key.keyCode==83){_2speedY/=5;_2speedX/=1.25;}
+		if(key.keyCode==68){_2right=false;}
+		if(key.keyCode==65){_2left=false;}
+		if(key.keyCode==87){_2up=false;}
+		if(key.keyCode==83){_2down=false;}
 		if(key.keyCode==27){paused=!paused;console.log("Pause was pressed (ESC)");}
 	}
 	function keypressed(key){
-		if(key.keyCode==39){speedX=5;dir=0;right=true;}
-		if(key.keyCode==37){speedX=-5;dir=1;left=true;}
-		if(key.keyCode==38){speedY=-5;dir=2;up=true;}
-		if(key.keyCode==40){speedY=5;dir=3;down=true;}
-		if(key.keyCode==68){speedX2=5;dir2=0;right2=true;}
-		if(key.keyCode==65){speedX2=-5;dir2=1;left2=true;}
-		if(key.keyCode==87){speedY2=-5;dir2=2;up2=true;}
-		if(key.keyCode==83){speedY2=5;dir2=3;down2=true;}
+		if(key.keyCode==39){_1speedX=5;_1dir=0;_1right=true;}
+		if(key.keyCode==37){_1speedX=-5;_1dir=1;_1left=true;}
+		if(key.keyCode==38){_1speedY=-5;_1dir=2;_1up=true;}
+		if(key.keyCode==40){_1speedY=5;_1dir=3;_1down=true;}
+		if(key.keyCode==68){_2speedX=5;_2dir=0;_2right=true;}
+		if(key.keyCode==65){_2speedX=-5;_2dir=1;_2left=true;}
+		if(key.keyCode==87){_2speedY=-5;_2dir=2;_2up=true;}
+		if(key.keyCode==83){_2speedY=5;_2dir=3;_2down=true;}
 	}
 	function drawPlayer(dir, x, y, clr){
 		context.beginPath();
@@ -49,46 +67,36 @@
 		context.fillStyle=clr;
 		context.fill();
 	}
+	function getRand(min, max){return Math.floor(Math.random()*(max-min+1)+min);}
 	var tX=0;
 	var tY=0;
 	var i=0;
-	function getRand(min, max){return Math.floor(Math.random()*(max-min+1)+min);}
 	function init(){
 		tX=getRand(20,canvas.width);
 		tY=getRand(20,canvas.height);
-		console.log("P1 Starting at: X:", x, "  Y:", y, "  Direction:", dir);
-		console.log("P2 Starting at: X:", x2, "  Y:", y2, "  Direction:", dir2);
+		console.log("P1 Starting at: X:", _1x, "  Y:", _1y, "  Direction:", _1dir);
+		console.log("P2 Starting at: X:", _2x, "  Y:", _2y, "  Direction:", _2dir);
 	}
-	var speedX=0;
-	var speedY=0;
-	var speedX2=0;
-	var speedY2=0;
-	var x=getRand(20,canvas.width-20);
-	var y=getRand(20,canvas.height-20);
-	var x2=getRand(20,canvas.width-20);
-	var y2=getRand(20,canvas.height-20);
-	var dir=getRand(0,3);
-	var dir2=getRand(0,3);
 	function draw(){
 		if(!paused){
-		if(up && down){speedY=0;}else{if(left && right){speedX=0;}}
-		x+=speedX;y+=speedY;
-		if(up2 && down2){speedY2=0;}else{if(left2 && right2){speedX2=0;}}
-		x2+=speedX2;y2+=speedY2;
-		context.clearRect(0,0,canvas.width,canvas.height)
-		//context.clearRect(x-25,y-25,x+25,y+25);
-		//context.clearRect(x2-25,y2-25,x2+25,y2+25);
-		if(x >= canvas.width+15){x=-10};
-		if(x <= -15){x=canvas.width+10};
-		if(y >= canvas.height+15){y=-10};
-		if(y <= -15){x=canvas.height+10};
-		drawPlayer(dir, x, y, "red");
-		drawPlayer(dir2, x2, y2, "blue");}
+		if(_1up && _1down){_1speedY=0;}else{if(_1left && _1right){_1speedX=0;}}
+		_1x+=_1speedX;_1y+=_1speedY;
+		if(_2up && _2down){_2speedY=0;}else{if(_2left && _2right){_2speedX=0;}}
+		_2x+=_2speedX;_2y+=_2speedY;
+		//context.clearRect(0,0,canvas.width,canvas.height)
+		context.clearRect(_1x-25,_1y-25,_1x+25,_1y+25);
+		context.clearRect(_2x-25,_2y-25,_2x+25,_2y+25);
+		if(_1x >= canvas.width+15){_1x=-10};
+		if(_1x <= -15){_1x=canvas.width+10};
+		if(_1y >= canvas.height+15){_1y=-10};
+		if(_1y <= -15){_1y=canvas.height+10};
+		if(_2x >= canvas.width+15){_2x=-10};
+		if(_2x <= -15){_2x=canvas.width+10};
+		if(_2y >= canvas.height+15){_2y=-10};
+		if(_2y <= -15){_2y=canvas.height+10};
+		drawPlayer(_1dir, _1x, _1y, "red");
+		drawPlayer(_2dir, _2x, _2y, "blue");}
 		setTimeout(draw,20);
 	}
-		init();
-	drawPlayer(dir, x, y, "red");
-	drawPlayer(dir2, x2, y2, "blue");
-	draw();//make the animation happen
 </script>
 </html>
