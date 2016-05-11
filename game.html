@@ -6,32 +6,43 @@
 	var canvas=document.getElementById("canvas");
 	var context=canvas.getContext("2d");
 	var paused=false;
+//player 1 = _1VARNAME
+	var _1speedX=0;
+	var _1speedY=0;
 	var _1left=false;
 	var _1right=false;
 	var _1up=false;
 	var _1down=false;
+	var _1x=getRand(20,canvas.width-20);
+	var _1y=getRand(20,canvas.height-20);
+	var _1dir=getRand(0,3);
+//player 2 = _2VARNAME
+	var _2speedX=0;
+	var _2speedY=0;
 	var _2left=false;
 	var _2right=false;
 	var _2up=false;
 	var _2down=false;
+	var _2x=getRand(20,canvas.width-20);
+	var _2y=getRand(20,canvas.height-20);
+	var _2dir=getRand(0,3);
+//computer 1 = __1VARNAME
+	var __1rand
+	var __1speedX=0;
+	var __1speedY=0;
 	var __1left=false;
 	var __1right=false;
 	var __1up=false;
 	var __1down=false;
-	var _1speedX=0;
-	var _1speedY=0;
-	var _2speedX=0;
-	var _2speedY=0;
-	var _1x=getRand(20,canvas.width-20);
-	var _1y=getRand(20,canvas.height-20);
-	var _2x=getRand(20,canvas.width-20);
-	var _2y=getRand(20,canvas.height-20);
-	var _1dir=getRand(0,3);
-	var _2dir=getRand(0,3);
+	var __1x=getRand(20,canvas.width-20);
+	var __1y=getRand(20,canvas.height-20);
+	var __1dir=getRand(0,3);
 		init();
 	drawPlayer(_1dir, _1x, _1y, "red");
 	drawPlayer(_2dir, _2x, _2y, "blue");
+	drawPlayer(__1dir, __1x, __1y, "green");
 	draw();//make the animation happen
+	comp();//run computer
 	function keyup(key){
 		if(key.keyCode==39 || key.keyCode==37){_1speedX/=5;_1speedY/=1.25;}
 		if(key.keyCode==38 || key.keyCode==40){_1speedY/=5;_1speedX/=1.25;}
@@ -67,15 +78,24 @@
 		context.fillStyle=clr;
 		context.fill();
 	}
+	function checkPos(x,y){
+		
+	}
 	function getRand(min, max){return Math.floor(Math.random()*(max-min+1)+min);}
-	var tX=0;
-	var tY=0;
-	var i=0;
 	function init(){
-		tX=getRand(20,canvas.width);
-		tY=getRand(20,canvas.height);
 		console.log("P1 Starting at: X:", _1x, "  Y:", _1y, "  Direction:", _1dir);
 		console.log("P2 Starting at: X:", _2x, "  Y:", _2y, "  Direction:", _2dir);
+	}
+	function comp(){
+		__1rand=getRand(0,1);
+		if(__1rand==0){
+			__1rand=getRand(0,3);
+			if(__1rand==0){__1speedX=5;__1dir=0;__1speedY/=5;__1left=false;__1right=true;__1up=false;__1down=false;}
+			if(__1rand==1){__1speedX=-5;__1dir=1;__1speedY/=5;__1left=true;__1right=false;__1up=false;__1down=false;}
+			if(__1rand==2){__1speedY=-5;__1dir=2;__1speedX/=5;__1left=false;__1right=false;__1up=true;__1down=false;}
+			if(__1rand==3){__1speedY=5;__1dir=3;__1speedX/=5;__1left=false;__1right=false;__1up=false;__1down=true;}
+		}
+		setTimeout(comp,200);
 	}
 	function draw(){
 		if(!paused){
@@ -83,19 +103,19 @@
 		_1x+=_1speedX;_1y+=_1speedY;
 		if(_2up && _2down){_2speedY=0;}else{if(_2left && _2right){_2speedX=0;}}
 		_2x+=_2speedX;_2y+=_2speedY;
-		//context.clearRect(0,0,canvas.width,canvas.height)
-		context.clearRect(_1x-25,_1y-25,_1x+25,_1y+25);
-		context.clearRect(_2x-25,_2y-25,_2x+25,_2y+25);
-		if(_1x >= canvas.width+15){_1x=-10};
-		if(_1x <= -15){_1x=canvas.width+10};
-		if(_1y >= canvas.height+15){_1y=-10};
-		if(_1y <= -15){_1y=canvas.height+10};
-		if(_2x >= canvas.width+15){_2x=-10};
-		if(_2x <= -15){_2x=canvas.width+10};
-		if(_2y >= canvas.height+15){_2y=-10};
-		if(_2y <= -15){_2y=canvas.height+10};
+		if(__1up && __1down){__1speedY=0;}else{if(__1left && __1right){__1speedX=0;}}
+		__1x+=__1speedX;__1y+=__1speedY;
+		context.clearRect(0,0,canvas.width,canvas.height)
+		if(_1x >= canvas.width+15)	{_1x=-10};	if(_1x <= -15)	{_1x=canvas.width+10};
+		if(_1y >= canvas.height+15)	{_1y=-10};	if(_1y <= -15)	{_1y=canvas.height+10};
+		if(_2x >= canvas.width+15)	{_2x=-10};	if(_2x <= -15)	{_2x=canvas.width+10};
+		if(_2y >= canvas.height+15)	{_2y=-10};	if(_2y <= -15)	{_2y=canvas.height+10};
+		if(__1x >= canvas.width+15)	{__1x=-10};	if(__1x <= -15)	{__1x=canvas.width+10};
+		if(__1y >= canvas.height+15)	{__1y=-10};	if(__1y <= -15)	{__1y=canvas.height+10};
+		//checkPos(_1x, _1y);checkPos(_2x, _2y);checkPos(__1x, __1y);
 		drawPlayer(_1dir, _1x, _1y, "red");
-		drawPlayer(_2dir, _2x, _2y, "blue");}
+		drawPlayer(_2dir, _2x, _2y, "blue");
+		drawPlayer(__1dir, __1x, __1y, "green");}
 		setTimeout(draw,20);
 	}
 </script>
